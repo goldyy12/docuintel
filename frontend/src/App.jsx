@@ -7,7 +7,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL;
 export default function App() {
   const [query, setQuery] = useState("");
   const [answer, setAnswer] = useState("");
-  const [results, setResults] = useState([]);
+
   const [loading, setLoading] = useState(false);
   const [filename, setFilename] = useState("");
   const [error, setError] = useState("");
@@ -27,7 +27,7 @@ export default function App() {
 
     setLoading(true);
     setAnswer("");
-    setResults([]);
+
     setError("");
 
     try {
@@ -36,7 +36,7 @@ export default function App() {
       });
 
       setAnswer(res.data.answer || "No answer found.");
-      setResults(res.data.results || []);
+
       console.log(res.data);
     } catch (err) {
       console.error(err);
@@ -129,21 +129,6 @@ export default function App() {
           }}
         />
       </div>
-
-      {/* 📚 Sources */}
-      {results.length > 0 && (
-        <div className="sources-section">
-          <h2>Sources</h2>
-          {results.map((r, i) => (
-            <div key={i} className="result-card">
-              <p>{r.content}</p>
-              <small className="similarity-text">
-                Similarity: {(r.similarity * 100).toFixed(2)}%
-              </small>
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 }

@@ -69,5 +69,5 @@ def search(query: str, filename: str):
     return {
         "query": query,
         "answer": answer,
-        "results": results
+        
     }
