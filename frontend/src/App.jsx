@@ -68,16 +68,17 @@ export default function App() {
       {loading && <p>Loading...</p>}
 
       {answer && (
-        <div style={{ marginTop: 20 }}>
+        <div className="answer-section">
           <h2>Answer</h2>
-          <p>{answer}</p>
+          <p className="answer-text">{answer}</p>
         </div>
       )}
 
       <div className="upload-section">
-        <h2>Upload File</h2>
+        <h2>Upload Source Document</h2>
         <input
           type="file"
+          className="file-input"
           onChange={(e) => {
             const file = e.target.files[0];
             if (!file) return;
@@ -88,7 +89,7 @@ export default function App() {
       </div>
 
       {results && results.length > 0 && (
-        <div style={{ marginTop: 20 }}>
+        <div className="sources-section">
           <h2>Sources</h2>
           {results.map((r) => (
             <div key={r.id} className="result-card">

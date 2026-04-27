@@ -1,51 +1,111 @@
 .container {
   max-width: 800px;
   margin: 50px auto;
-  font-family: Arial, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   padding: 0 20px;
+  color: #333;
+}
+
+h1 {
+  text-align: center;
+  color: #222;
+  margin-bottom: 30px;
 }
 
 .search-section {
   display: flex;
   gap: 10px;
+  margin-bottom: 20px;
 }
 
 .search-input {
   flex: 1;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.search-input:focus {
+  border-color: #007bff;
 }
 
 .btn-primary {
-  padding: 10px 20px;
+  padding: 10px 25px;
   cursor: pointer;
   background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background 0.2s;
 }
 
 .btn-primary:hover {
   background-color: #0056b3;
 }
 
-.upload-section {
-  margin-top: 30px;
+/* FIX: Visibility for the Answer section */
+.answer-section {
+  margin: 30px 0;
   padding: 20px;
-  background-color: #f9f9f9;
+  background-color: #f0f7ff;
+  border-left: 5px solid #007bff;
   border-radius: 8px;
 }
 
-.result-card {
-  border: 1px solid #ddd;
-  padding: 15px;
+.answer-section h2 {
+  margin-top: 0;
+  color: #0056b3;
+  font-size: 1.2rem;
+}
+
+.answer-text {
+  line-height: 1.6;
+  font-size: 1.1rem;
+  color: #444;
+}
+
+/* FIX: Visibility for the Upload section */
+.upload-section {
+  margin-top: 40px;
+  padding: 30px;
+  background-color: #f8f9fa; /* Light gray background */
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.upload-section h2 {
+  margin-top: 0;
+  color: #333; /* Darker text for visibility */
   margin-bottom: 15px;
+}
+
+/* Styling the file input to look cleaner */
+.file-input {
+  cursor: pointer;
+  padding: 10px;
+  background: white;
   border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+.result-card {
+  border: 1px solid #eee;
+  padding: 20px;
+  margin-bottom: 15px;
+  border-radius: 10px;
   background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .similarity-text {
-  color: #666;
-  font-size: 0.85rem;
+  display: block;
+  margin-top: 10px;
+  color: #28a745; /* Green to show similarity clearly */
+  font-weight: bold;
+  font-size: 0.8rem;
 }
