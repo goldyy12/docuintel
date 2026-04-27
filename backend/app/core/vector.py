@@ -13,7 +13,7 @@ def get_embeddings():
     if embeddings_model is None:
         from langchain_google_genai import GoogleGenerativeAIEmbeddings
         embeddings_model = GoogleGenerativeAIEmbeddings(
-            model="models/embedding-001",
+            model="models/embedding-004",
             google_api_key=os.getenv("GOOGLE_API_KEY")
         )
     return embeddings_model
