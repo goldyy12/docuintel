@@ -1,6 +1,7 @@
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 import re
+import os
 from app.core.groq import query_groq
 from app.database.supabase import supabase
 from app.core.loader import extract_text_from_pdf
@@ -9,32 +10,40 @@ from app.core.vector import embed_and_store, perform_search
 
 app = FastAPI()
 
+allowed_origins = [
+    "http://localhost:5173",
+    "http://localhost:3000",
+    os.getenv("FRONTEND_URL", ""),
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # your frontend
+    allow_origins=[origin for origin in allowed_origins if origin],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 def clean_text(text):
     # Remove newlines and extra spaces
     cleaned = re.sub(r'\s+', ' ', text.replace('\n', ' ')).strip()
     return cleaned
+
 @app.get("/")
 def home():
-    return {"message": "Hello World"}
+    return {"message": "Hello World", "status": "ok"}
 
+@app.get("/health")
+def health():
+    return {"status": "healthy"}
 
 @app.post("/upload")
 async def upload_file(file: UploadFile = File(...)):
     file_content = await file.read()
-
     
     text = extract_text_from_pdf(file_content)
-
     chunks = split_text(text)
-
-    status = embed_and_store(chunks,file.filename)
+    status = embed_and_store(chunks, file.filename)
 
     return {
         "filename": file.filename,
@@ -42,9 +51,7 @@ async def upload_file(file: UploadFile = File(...)):
         "total_characters": len(text),
         "status": "file uploaded successfully",
         "preview": chunks[:3],
-        
     }
-
 
 @app.get("/search")
 def search(query: str, filename: str):
