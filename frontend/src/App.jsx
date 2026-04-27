@@ -37,6 +37,7 @@ export default function App() {
 
       setAnswer(res.data.answer || "No answer found.");
       setResults(res.data.results || []);
+      console.log(res.data);
     } catch (err) {
       console.error(err);
       setError("Error fetching results");
