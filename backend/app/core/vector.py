@@ -12,8 +12,9 @@ def get_embeddings():
         if not google_api_key:
             raise ValueError("GOOGLE_API_KEY environment variable not set")
         
+        # Updated to the latest model as per April 2026 docs
         embeddings_model = GoogleGenerativeAIEmbeddings(
-            model="models/text-embedding-005",
+            model="models/gemini-embedding-2",
             google_api_key=google_api_key
         )
     return embeddings_model
@@ -21,11 +22,16 @@ def get_embeddings():
 def embed_and_store(chunks, filename):
     """Embed chunks and store in Supabase"""
     model = get_embeddings()
-    embeddings = model.embed_documents(chunks)
+    
+    # Per docs: Prepend document structure for asymmetric retrieval
+    # Format: title: {filename} | text: {chunk_content}
+    formatted_chunks = [f"title: {filename} | text: {chunk}" for chunk in chunks]
+    
+    embeddings = model.embed_documents(formatted_chunks)
 
     data = [
         {
-            "content": chunk,
+            "content": chunk, # Store original chunk for the UI
             "embedding": embedding,
             "filename": filename
         }
@@ -38,12 +44,17 @@ def embed_and_store(chunks, filename):
 def perform_search(query, filename):
     """Search documents using embeddings"""
     model = get_embeddings()
-    query_embedding = model.embed_query(query)
+    
+    # Per docs: Prepend query structure for asymmetric retrieval
+    # Format: task: search result | query: {query}
+    formatted_query = f"task: search result | query: {query}"
+    
+    query_embedding = model.embed_query(formatted_query)
 
     response = supabase.rpc("match_documents", {
         "query_embedding": query_embedding,
         "match_count": 5,
-        "filter": {"filename": filename}
+        "filter": {"filename": filename} if filename else {}
     }).execute()
 
     return response.data
