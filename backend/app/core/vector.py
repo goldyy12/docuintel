@@ -13,7 +13,7 @@ def get_embeddings():
             raise ValueError("GOOGLE_API_KEY environment variable not set")
         
         embeddings_model = GoogleGenerativeAIEmbeddings(
-            model="models/text-embedding-004",
+            model="models/embedding-004",
             google_api_key=google_api_key
         )
     return embeddings_model
