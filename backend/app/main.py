@@ -68,5 +68,6 @@ def search(query: str, filename: str):
     answer = query_groq(query, context)
     return {
         "query": query,
-        "answer": answer
+        "answer": answer,
+        "results": results
     }
