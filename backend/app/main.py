@@ -41,7 +41,10 @@ def health():
 async def upload_file(file: UploadFile = File(...)):
     file_content = await file.read()
     
-    text = extract_text_from_pdf(file_content)
+    try:
+         text = extract_text_from_pdf(file_content)
+    except Exception as e:
+       return {"error": str(e)}
     chunks = split_text(text)
     status = embed_and_store(chunks, file.filename)
 

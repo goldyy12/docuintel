@@ -60,7 +60,7 @@ export default function App() {
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Ask something..."
         />
-        <button className="btn-primary" onClick={search}>
+        <button className="btn-primary" onClick={search} disabled={!filename}>
           Search
         </button>
       </div>
