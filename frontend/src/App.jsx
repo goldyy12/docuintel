@@ -14,7 +14,6 @@ export default function App() {
   const [searchAll, setSearchAll] = useState(false);
 
   const search = async () => {
-    // 🔴 Safety check (even if button is disabled)
     if (!searchAll && !filename) {
       setError("Please upload a document first.");
       return;
@@ -94,19 +93,16 @@ export default function App() {
         </label>
       </div>
 
-      {/* 📄 Current file */}
       {filename && !searchAll && (
         <p style={{ marginTop: "10px", opacity: 0.7 }}>
           Using document: <strong>{filename}</strong>
         </p>
       )}
 
-      {/* ❌ Error */}
       {error && <p style={{ color: "red", marginTop: "10px" }}>{error}</p>}
 
       {loading && <p>Loading...</p>}
 
-      {/* ✅ Answer */}
       {answer && (
         <div className="answer-section">
           <h2>Answer</h2>
@@ -114,7 +110,6 @@ export default function App() {
         </div>
       )}
 
-      {/* 📤 Upload */}
       <div className="upload-section">
         <h2>Upload Source Document</h2>
         <input
