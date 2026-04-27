@@ -1,4 +1,4 @@
-from backend.app.database.supabase import create_client, Client
+from app.database.supabase import create_client, Client
 import os
 from dotenv import load_dotenv
 
