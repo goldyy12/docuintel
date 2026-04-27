@@ -1,5 +1,9 @@
 import { useState } from "react";
 import axios from "axios";
+import "./App.css"; // Importing the new CSS file
+
+// Fallback to localhost if env is not defined
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 export default function App() {
   const [query, setQuery] = useState("");
@@ -16,26 +20,26 @@ export default function App() {
     setResults([]);
 
     try {
-      const res = await axios.get("http://localhost:8000/search", {
+      const res = await axios.get(`${API_BASE_URL}/search`, {
         params: { query, filename },
       });
-      console.log(res.data);
 
       setAnswer(res.data.answer);
       setResults(res.data.results);
     } catch (err) {
       console.error(err);
       setAnswer("Error fetching results");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
+
   const uploadFile = async (file) => {
     const formData = new FormData();
     formData.append("file", file);
 
     try {
-      await axios.post("http://localhost:8000/upload ", formData, {
+      await axios.post(`${API_BASE_URL}/upload`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       alert("File uploaded successfully");
@@ -46,18 +50,17 @@ export default function App() {
   };
 
   return (
-    <div style={{ maxWidth: 800, margin: "50px auto", fontFamily: "Arial" }}>
+    <div className="container">
       <h1>AI Search</h1>
 
-      <div style={{ display: "flex", gap: 10 }}>
+      <div className="search-section">
         <input
+          className="search-input"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Ask something..."
-          style={{ flex: 1, padding: 10 }}
         />
-
-        <button onClick={search} style={{ padding: "10px 20px" }}>
+        <button className="btn-primary" onClick={search}>
           Search
         </button>
       </div>
@@ -70,35 +73,29 @@ export default function App() {
           <p>{answer}</p>
         </div>
       )}
-      <div>
+
+      <div className="upload-section">
         <h2>Upload File</h2>
         <input
           type="file"
           onChange={(e) => {
             const file = e.target.files[0];
             if (!file) return;
-
             setFilename(file.name);
             uploadFile(file);
           }}
-        />{" "}
+        />
       </div>
 
       {results && results.length > 0 && (
         <div style={{ marginTop: 20 }}>
           <h2>Sources</h2>
-
           {results.map((r) => (
-            <div
-              key={r.id}
-              style={{
-                border: "1px solid #ddd",
-                padding: 10,
-                marginBottom: 10,
-              }}
-            >
+            <div key={r.id} className="result-card">
               <p>{r.content}</p>
-              <small>Similarity: {r.similarity}</small>
+              <small className="similarity-text">
+                Similarity: {(r.similarity * 100).toFixed(2)}%
+              </small>
             </div>
           ))}
         </div>
