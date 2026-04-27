@@ -6,7 +6,7 @@ from app.database.supabase import supabase
 from app.core.loader import extract_text_from_pdf
 from app.core.splitter import split_text
 from app.core.vector import embed_and_store, perform_search
-from app.core.vector import perform_search
+
 app = FastAPI()
 
 app.add_middleware(
