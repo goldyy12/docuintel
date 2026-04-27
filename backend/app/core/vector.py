@@ -1,25 +1,26 @@
 import os
-from langchain_groq import GroqEmbeddings
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from app.database.supabase import supabase
 
-# Initialize Google Embeddings (Uses API instead of local RAM)
-import os
-from app.database.supabase import supabase
-
+# Initialize Google Generative AI Embeddings
 embeddings_model = None
 
 def get_embeddings():
     global embeddings_model
     if embeddings_model is None:
+        google_api_key = os.getenv("GOOGLE_API_KEY")
+        if not google_api_key:
+            raise ValueError("GOOGLE_API_KEY environment variable not set")
         
-       embeddings_model = GroqEmbeddings(
-    model="mixtral-8x7b-32768",
-    groq_api_key=os.getenv("GROQ_API_KEY")
-)
+        embeddings_model = GoogleGenerativeAIEmbeddings(
+            model="models/text-embedding-004",
+            google_api_key=google_api_key
+        )
     return embeddings_model
-def embed_and_store(chunks, filename):
-    model = get_embeddings()
 
+def embed_and_store(chunks, filename):
+    """Embed chunks and store in Supabase"""
+    model = get_embeddings()
     embeddings = model.embed_documents(chunks)
 
     data = [
@@ -32,11 +33,11 @@ def embed_and_store(chunks, filename):
     ]
 
     supabase.table("documents").insert(data).execute()
-
     return "stored successfully"
-def perform_search(query, filename):
-    model = get_embeddings()
 
+def perform_search(query, filename):
+    """Search documents using embeddings"""
+    model = get_embeddings()
     query_embedding = model.embed_query(query)
 
     response = supabase.rpc("match_documents", {
