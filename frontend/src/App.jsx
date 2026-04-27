@@ -1,8 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
-import "./App.css"; // Importing the new CSS file
+import "./App.css";
 
-// Fallback to localhost if env is not defined
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 export default function App() {
@@ -11,24 +10,36 @@ export default function App() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [filename, setFilename] = useState("");
+  const [error, setError] = useState("");
+  const [searchAll, setSearchAll] = useState(false);
 
   const search = async () => {
-    if (!query) return;
+    // 🔴 Safety check (even if button is disabled)
+    if (!searchAll && !filename) {
+      setError("Please upload a document first.");
+      return;
+    }
+
+    if (!query) {
+      setError("Please enter a query.");
+      return;
+    }
 
     setLoading(true);
     setAnswer("");
     setResults([]);
+    setError("");
 
     try {
       const res = await axios.get(`${API_BASE_URL}/search`, {
-        params: { query, filename },
+        params: { query, filename: searchAll ? "" : filename },
       });
 
-      setAnswer(res.data.answer);
-      setResults(res.data.results);
+      setAnswer(res.data.answer || "No answer found.");
+      setResults(res.data.results || []);
     } catch (err) {
       console.error(err);
-      setAnswer("Error fetching results");
+      setError("Error fetching results");
     } finally {
       setLoading(false);
     }
@@ -45,7 +56,7 @@ export default function App() {
       alert("File uploaded successfully");
     } catch (err) {
       console.error(err);
-      alert("Error uploading file");
+      setError("Error uploading file");
     }
   };
 
@@ -60,13 +71,41 @@ export default function App() {
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Ask something..."
         />
-        <button className="btn-primary" onClick={search} disabled={!filename}>
+
+        <button
+          className="btn-primary"
+          onClick={search}
+          disabled={!searchAll && !filename}
+        >
           Search
         </button>
       </div>
 
+      {/* 🔥 Toggle */}
+      <div style={{ marginTop: "10px" }}>
+        <label>
+          <input
+            type="checkbox"
+            checked={searchAll}
+            onChange={() => setSearchAll(!searchAll)}
+          />{" "}
+          Search all documents
+        </label>
+      </div>
+
+      {/* 📄 Current file */}
+      {filename && !searchAll && (
+        <p style={{ marginTop: "10px", opacity: 0.7 }}>
+          Using document: <strong>{filename}</strong>
+        </p>
+      )}
+
+      {/* ❌ Error */}
+      {error && <p style={{ color: "red", marginTop: "10px" }}>{error}</p>}
+
       {loading && <p>Loading...</p>}
 
+      {/* ✅ Answer */}
       {answer && (
         <div className="answer-section">
           <h2>Answer</h2>
@@ -74,6 +113,7 @@ export default function App() {
         </div>
       )}
 
+      {/* 📤 Upload */}
       <div className="upload-section">
         <h2>Upload Source Document</h2>
         <input
@@ -83,16 +123,18 @@ export default function App() {
             const file = e.target.files[0];
             if (!file) return;
             setFilename(file.name);
+            setError("");
             uploadFile(file);
           }}
         />
       </div>
 
-      {results && results.length > 0 && (
+      {/* 📚 Sources */}
+      {results.length > 0 && (
         <div className="sources-section">
           <h2>Sources</h2>
-          {results.map((r) => (
-            <div key={r.id} className="result-card">
+          {results.map((r, i) => (
+            <div key={i} className="result-card">
               <p>{r.content}</p>
               <small className="similarity-text">
                 Similarity: {(r.similarity * 100).toFixed(2)}%
