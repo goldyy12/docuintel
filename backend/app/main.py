@@ -25,7 +25,7 @@ app.add_middleware(
 )
 
 def clean_text(text):
-    # Remove newlines and extra spaces
+    
     cleaned = re.sub(r'\s+', ' ', text.replace('\n', ' ')).strip()
     return cleaned
 
