@@ -20,7 +20,7 @@ def get_embeddings():
     return embeddings_model
 
 def embed_and_store(chunks, filename):
-    """Embed chunks and store in Supabase"""
+    
     model = get_embeddings()
     
   
@@ -41,7 +41,7 @@ def embed_and_store(chunks, filename):
     return "stored successfully"
 
 def perform_search(query, filename):
-    """Search documents using embeddings"""
+    
     model = get_embeddings()
     
     
