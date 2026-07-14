@@ -1,36 +1,29 @@
 # 📚 AI Document Intelligence (RAG System)
 
-A full-stack AI-powered document question-answering system built using Retrieval-Augmented Generation (RAG).  
+A full-stack AI-powered document question-answering system built using Retrieval-Augmented Generation (RAG).
 Upload PDFs and ask questions — the system retrieves relevant context and generates accurate answers using LLMs.
 
----
-
 ## 🚀 Features
-
 - 📄 Upload PDF documents
 - ✂️ Automatic text extraction & chunking
 - 🧠 Semantic search using embeddings
 - ⚡ Fast LLM responses using Groq
-- 🗂️ Vector storage with Supabase
+- 🗂️ Vector storage with Supabase (pgvector)
 - 🔍 Context-aware question answering
 - 🌐 CORS-enabled API for frontend integration
 
----
-
 ## 🏗️ Tech Stack
 
-### Backend
+**Backend**
 - FastAPI
 - Python
 
-### AI / ML
-- Google Generative AI Embeddings (`gemini-embedding-2`)
+**AI / ML**
+- SentenceTransformers (embeddings)
 - Groq (LLM inference)
 
-### Database
-- Supabase (PostgreSQL + vector search)
-
----
+**Database**
+- Supabase (PostgreSQL + pgvector for vector search)
 
 ## ⚙️ How It Works
 
@@ -39,8 +32,8 @@ Upload PDFs and ask questions — the system retrieves relevant context and gene
    - Split into chunks
 
 2. **Embedding**
-   - Convert chunks into vector embeddings
-   - Store in Supabase
+   - Convert chunks into vector embeddings using SentenceTransformers
+   - Store in Supabase (pgvector)
 
 3. **Search**
    - User query → embedding
@@ -51,14 +44,14 @@ Upload PDFs and ask questions — the system retrieves relevant context and gene
    - Send context to LLM (Groq)
    - Return final answer
 
----
-
 ## 📡 API Endpoints
 
 ### `GET /`
 Health check
-```json
+
+\`\`\`json
 {
   "message": "Hello World",
   "status": "ok"
 }
+\`\`\`
