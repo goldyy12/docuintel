@@ -15,7 +15,8 @@ def get_embeddings():
        
         embeddings_model = GoogleGenerativeAIEmbeddings(
             model="models/gemini-embedding-2",
-            google_api_key=google_api_key
+            google_api_key=google_api_key,
+            output_dimensionality=1536
         )
     return embeddings_model
 
